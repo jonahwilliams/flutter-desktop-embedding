@@ -54,18 +54,6 @@ else
 FLUTTER_BIN=$(FLUTTER_ROOT)/bin/flutter
 endif
 
-# Unpack configuration.
-# TODO: Revisit how this is managed, either by having plugins builds always use
-# an existing cache provided to the build, or moving logic into the tool.
-FLUTTER_UNPACK_ARGS=--target-platform=linux-x64 \
-	--cache-dir="$(FLUTTER_CACHE_DIR)"
-ifneq ($(strip $(LOCAL_ENGINE)),)
-FLUTTER_UNPACK_ARGS+= --local-engine="$(LOCAL_ENGINE)"
-endif
-ifneq ($(strip $(FLUTTER_ENGINE)),)
-FLUTTER_UNPACK_ARGS+= --local-engine-src-path="$(FLUTTER_ENGINE)"
-endif
-
 # Add relevant code from the wrapper library, which is intended to be statically
 # built into the plugin.
 # Use abspath for the wrapper root, which can contain relative paths; the
@@ -125,7 +113,7 @@ $(WRAPPER_SOURCES) $(FLUTTER_LIB): | sync
 # its inputs and outputs yet.
 .PHONY: sync
 sync:
-	$(FLUTTER_BIN) unpack $(FLUTTER_UNPACK_ARGS)
+	$(FLUTTER_BIN)
 
 -include $(DEPENDENCY_FILES)
 
